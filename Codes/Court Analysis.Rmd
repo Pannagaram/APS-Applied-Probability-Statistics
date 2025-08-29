@@ -1,0 +1,58 @@
+---
+title: "Court Decision Analysis"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+  pdf_document: default
+editor_options:
+  chunk_output_type: inline
+---
+
+#### Execute the following cells to load the libraries
+
+```{r}
+library(ggplot2)
+library(dplyr)
+```
+
+
+#### Load the court dataset
+
+```{r}
+file = ?
+courtData = ?
+```
+
+#### User-defined function to simulate a judge's decision
+
+```{r}
+# How does Judge-A rule on n petitions?
+
+```
+
+#### Call the user-defined function to simulate a judge-A's decision
+
+```{r}
+
+```
+
+#### User-defined function to simulate the court's decision
+
+```{r}
+
+```
+
+#### Court incorrect probability
+
+```{r}
+# Simulate the court's decision on several unseen petitions
+simulatedData = ?
+
+# Fraction of times the court has made a correct decision
+?
+
+# Fraction of times the court has made an incorrect decision
+?
+```
+

@@ -1,0 +1,39 @@
+```{r}
+# sampling space from the partially broken bottle 
+s1 = c('A1', 'A2')
+# picking likelihoods for this sample space
+p1 = c(0.5, 0.5)
+# sampling space for the mixed-up pile
+s2 = c(paste0('A', c(3:10)), paste0('B', c(1:10)))
+# picking likelihoods for the mixed-up pile
+p2 = replicate(18, 1/18)
+```
+
+```{r}
+# user defined function to simulate one trail of random experiment: Mr. Brown picking one tablet from the partially broken and another from mixed-up pile
+simTrial = function(){
+  return(c(sample(s2, size = 2, replace = T, prob = p2)))
+}
+```
+
+```{r}
+nsimulations = 100000
+simulateData = replicate(nsimulations, simTrial())
+```
+
+```{r}
+# user defined function to check if the event of interest Mr.Brown picks a type-A tablet and type-B tablet has occurred in one-trail of the random experiment
+checkEvent = function(data){
+  return (sum(grepl('A', data)) == 1)
+}
+```
+
+```{r}
+# calculate the fraction of times the event of interest occurred in the simulated data
+mean(apply(simulateData, 2, checkEvent))
+```
+
+```{r}
+
+```
+

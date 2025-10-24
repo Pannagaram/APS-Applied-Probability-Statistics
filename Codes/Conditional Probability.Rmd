@@ -1,0 +1,174 @@
+---
+title: "Conditional probability"
+output:
+  word_document: default
+  pdf_document: default
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+#### Execute the following cells to load the libraries
+```{r}
+library(ggplot2)
+library(dplyr)
+```
+
+
+#### Load the bats data to a dataframe where the columns correspond to whether a gene is expressed or not expressed in the bats and whether the Ebola virus is present or absent in the bats
+```{r}
+dfBat = read.csv('Data/bats.csv', header = TRUE, row.names = 1, stringsAsFactors = TRUE)
+head(dfBat)
+```
+
+##### Get the genes that are expressed for the 1st bat by using two approaches: (1) logical indexing for the columns in base R (2) the dplyr library
+```{r}
+dfBat[1, dfBat[1,1:5] == T]
+```
+
+#### Calculate the probability that a random bat carries the Ebola virus using two approaches: (1) base R (2) the dplyr library.
+```{r}
+
+```
+
+#### Calculate the probability that gene-1 through gene-5 is expressed in a random bat.
+```{r}
+ 
+```
+
+#### Is the presence of Ebola virus dependent on the expression of any of the genes 1 through 5? Answer this by noting that if P(Gene-j expressed | Ebola ) = P(Gene-j expressed) approximately based on the data, then the j-th gene's expression is most likely independent of the bat carrying the Ebola virus and vice versa. Note that P(Gene-j expressed) is calculated in the previous question.
+```{r}
+# Subset the dataframe to those bats that carry the Ebola virus
+
+
+# Conditional probability that gene-1 through gene-5 is expressed given that the bat carries the Ebola virus
+
+```
+
+#### Suppose a bat has one of the genes identified in the previous question expressed. What is the probability that it carries the Ebola virus? From you answers, conclude which gene's expression is most indicative of a random bat carrying the Ebola virus.
+```{r}
+
+```
+
+#### Load the 'emergency.csv' file to a dataframe and answer the following questions:
+1. What is the probability that the next incoming patient is in (a) good, (b) fair, and (c) serious condition?
+2. What is the probability that the next incoming patient is (a) insured and (b) not insured?
+3. What is the probability that the next incoming patient is "serious and insured"?
+4. Given that the next incoming patient is known to be serious, what is the probability that they are insured?
+5. Given that the next incoming patient is known to be insured, what is the probability that they are serious?
+6. Given that the next incoming patient is known to be not insured, what is the probability that they are in a good or fair condition?
+
+```{r}
+dfPatient = read.csv('Data/emergency.csv', header = TRUE, row.names = 1)
+head(dfPatient)
+```
+
+
+1. What is the probability that the next incoming patient is in (a) good, (b) fair, and (c) serious condition?
+
+
+```{r}
+#Base R method
+mean(dfPatient[, 'Condition'] == 'good')
+
+#dplyr method
+dfPatient %>% summarise(Good_fraction_condition = mean(Condition == 'good'))
+```
+
+```{r}
+#Base R method
+mean(dfPatient[, 'Condition'] == 'fair')
+
+#dplyr method
+dfPatient %>% summarise(Good_fraction_condition = mean(Condition == 'fair'))
+```
+
+```{r}
+#Base R method
+mean(dfPatient[, 'Condition'] == 'serious')
+
+#dplyr method
+dfPatient %>% summarise(Good_fraction_condition = mean(Condition == 'serious'))
+```
+
+
+2. What is the probability that the next incoming patient is (a) insured and (b) not insured?
+
+
+```{r}
+#Base R method
+mean(dfPatient[, 'Insurance'] == 'insured')
+
+#dplyr method
+dfPatient %>% summarise(Good_fraction_insurance = mean(Insurance == 'insured'))
+```
+
+```{r}
+#Base R method
+mean(dfPatient[, 'Insurance'] == 'not insured')
+
+#dplyr method
+dfPatient %>% summarise(Good_fraction_insurance = mean(Insurance == 'not insured'))
+```
+
+
+3. What is the probability that the next incoming patient is "serious and insured"?
+
+
+```{r}
+#Base R method
+E1 = dfPatient[, 'Condition'] == 'serious'
+E2 = dfPatient[, 'Insurance'] == 'insured'
+mean(E1 & E2)
+
+#dplyr method
+dfPatient %>% summarise(serious_insured = mean((Condition == 'serious') & (Insurance == 'insured')))
+```
+
+
+4. Given that the next incoming patient is known to be serious, what is the probability that they are insured?
+
+
+```{r}
+#Base R method
+dfPatientSerious = dfPatient %>% filter(Condition == 'serious')
+mean(dfPatientSerious[, 'Insurance'] == 'insured')
+
+#dplyr method
+dfPatient %>% filter(Condition == 'serious') %>% summarise(insured_given_serious = mean(Insurance == 'insured'))
+```
+
+
+5. Given that the next incoming patient is known to be insured, what is the probability that they are serious?
+
+
+```{r}
+#Base R method
+dfPatientInsured = dfPatient %>% filter(Insurance == 'insured')
+mean(dfPatientInsured[, 'Condition'] == 'serious')
+
+#dplyr method
+dfPatient %>% filter(Insurance == 'insured') %>% summarise(serious_given_insured = mean(Condition == 'serious'))
+```
+
+
+6. Given that the next incoming patient is known to be not insured, what is the probability that they are in a good or fair condition?
+
+
+```{r}
+#Base R method
+dfPatientNotInsured = dfPatient %>% filter(Insurance == 'not insured')
+mean(dfPatientNotInsured[, 'Condition'] == 'good' | dfPatientNotInsured[, 'Condition'] == 'fair')
+
+#dplyr method
+dfPatient %>% filter(Insurance == 'not insured') %>% summarise(goodorfair_given_insured = mean(Condition == 'good' | Condition == 'fair'))
+```
+
+
+
+
+
+
+
+

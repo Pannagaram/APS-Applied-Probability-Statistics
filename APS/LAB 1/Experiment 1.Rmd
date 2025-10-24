@@ -1,0 +1,126 @@
+---
+title: "Experiment 1"
+output: html_document
+date: "2025-09-15"
+---
+# question 1
+
+```{r}
+x=rbinom(1,1,0.6)
+print(x)
+
+y=dbinom(1,1,0.6)
+print(y)
+
+p=0.6
+prob=c(1-p,p)
+
+x_values=c(0,1)
+plot(x_values,prob,type='h',xlim=c(0,2),ylim=c(0,1))
+```
+
+# question 2
+
+```{r}
+x=rbinom(1,50,0.6)
+print(x)
+n=50
+outcomes=0:n
+rv=vector("numeric",length=51)
+for( i in outcomes)
+
+{
+  rv[i-1]=dbinom(i,50,0.6)
+}
+
+plot(outcomes,rv,type='h',xlim=c(0,n-1),ylim=c(0,0.2))
+```
+
+# question 3
+
+```{r}
+moment_ans=function(q){
+  s=0
+  for(i in outcomes){
+    s=s+(i^q)*rv[i+1]
+  }
+  return(s)
+}
+print(moment_ans(1))
+mvar=moment_ans(2)-(moment_ans(1)^2)
+print(mvar)
+
+```
+
+# question 4
+
+```{r}
+set.seed(123)
+n = 50
+p = 0.4
+simulations = 10000
+results = rbinom(simulations, n, p)
+
+pmf_est = table(results) / simulations
+
+
+plot(as.numeric(names(pmf_est)), pmf_est, type = 'h', lwd = 2,
+     main = "Estimated PMF of Requests in T", xlab = "Number of Requests", ylab = "Probability")
+
+
+mean_requests = mean(results)
+var_requests = var(results)
+print(paste("Expected number of requests:", mean_requests))
+print(paste("Variance:", var_requests))
+
+
+max_realistic = mean_requests + 3 * sqrt(var_requests)
+print(paste("Maximum expected requests (approx):", round(max_realistic)))
+```
+
+# question 5
+
+```{r}
+lambdas = c(10, 20, 30, 40, 50)
+
+par(mfrow = c(2, 3))  
+for (lambda in lambdas) {
+  x = 0:(lambda + 20)
+  pmf = dpois(x, lambda)
+  plot(x, pmf, type = "h", lwd = 2, main = paste("Poisson PMF (λ=", lambda, ")", sep=""),
+       xlab = "x", ylab = "P(X = x)")
+  points(x, pmf, pch = 16)
+}
+par(mfrow = c(1, 1))  # Reset
+```
+
+# question 6
+
+```{r}
+lambda_approx = n * p
+print(paste("Best lambda to approximate Binomial(n=100, p=0.4):", lambda_approx))
+```
+
+# question 7
+
+```{r}
+calculate_error <- function(n, p) {
+  lambda = n * p
+  x_vals = 0:n
+  binom_pmf = dbinom(x_vals, n, p)
+  pois_pmf = dpois(x_vals, lambda)
+  length_diff = length(binom_pmf) - length(pois_pmf)
+  if (length_diff > 0) {
+    pois_pmf = c(pois_pmf, rep(0, length_diff))
+  }
+  return(sum(abs(binom_pmf - pois_pmf)))
+}
+
+ns = seq(10, 500, by=10)
+errors = sapply(ns, calculate_error, p=0.4)
+
+plot(ns, errors, type='b', col='blue', pch=16,
+     main="Error between Binomial and Poisson vs n",
+     xlab="n", ylab="Total Absolute Error")
+```
+
